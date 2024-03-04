@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
-// import { CreateAuthDto } from './dto/create-auth.dto';
-// import { UpdateAuthDto } from './dto/update-auth.dto';
 import { loginDTO } from './dto/login.dto';
 import { signUpDTO } from './dto/sign-up.dto';
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { query } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +14,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
   prisma = new PrismaClient();
-  async login(body: loginDTO): Promise<any> {
+  async login(body: loginDTO): Promise<string> {
     try {
       const { email, pass_word } = body;
 
@@ -51,7 +50,7 @@ export class AuthService {
     }
   }
 
-  async signUp(body: signUpDTO): Promise<any> {
+  async signUp(body: signUpDTO, role: string): Promise<string> {
     try {
       const {
         fullname,
@@ -60,7 +59,6 @@ export class AuthService {
         phone,
         birth_day,
         gender,
-        role,
         skill,
         certification,
       } = body;
@@ -77,6 +75,15 @@ export class AuthService {
       // hashSyncPw
       const password = bcrypt.hashSync(pass_word, 8);
 
+      // checkAvatar and define if is not exist
+      let { avatar } = body;
+      if (avatar === '') {
+        const initAvatar = fullname.split(' ');
+        const avatarName =
+          initAvatar[0][0] + initAvatar[initAvatar.length - 1][0];
+        avatar = `https://ui-avatars.com/api/?name=${avatarName}&background=random&size=100`;
+      }
+
       // createNewUser
       const newUser = {
         fullname,
@@ -85,9 +92,10 @@ export class AuthService {
         phone,
         birth_day,
         gender,
-        role,
+        role: role,
         skill,
         certification,
+        avatar,
       };
       await this.prisma.users.create({
         data: newUser,
@@ -97,25 +105,5 @@ export class AuthService {
     } catch (error) {
       return `Error: ${error}`;
     }
-  }
-
-  // create(createAuthDto: CreateAuthDto) {
-  //   return 'This action adds a new auth';
-  // }
-
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  // update(id: number, updateAuthDto: UpdateAuthDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
   }
 }

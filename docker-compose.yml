@@ -6,18 +6,18 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=1234
     ports:
-      - 3310:3306
+      - 3311:3306
     networks:
       - connectFiverr
   backend:
     depends_on:
       - mysqlDB
-    container_name: backend
+    container_name: backend_fiverr
     env_file:
       - .env
     build: .
     ports:
-      - 3001:3000
+      - 3000:3001
     networks:
       - connectFiverr
 networks:

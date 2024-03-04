@@ -7,10 +7,11 @@ import {
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { JwtModule } from '@nestjs/jwt';
+import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 // import { checkUser } from 'src/middleware/checkUser.middleware';
 
 @Module({
-  imports: [JwtModule.register({})],
+  imports: [JwtModule.register({}), CloudinaryModule],
   controllers: [UsersController],
   providers: [UsersService],
 })
