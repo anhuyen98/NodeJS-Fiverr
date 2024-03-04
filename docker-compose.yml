@@ -1,17 +1,17 @@
 version: '3'
 services:
-  mysqlDB:
+  mysql_db:
     image: mysql
-    container_name: mysqlDB
+    container_name: mysql_db
     environment:
       - MYSQL_ROOT_PASSWORD=1234
     ports:
-      - 3311:3306
+      - 3306:3306
     networks:
-      - connectFiverr
+      - connect-fiverr
   backend:
     depends_on:
-      - mysqlDB
+      - mysql_db
     container_name: backend_fiverr
     env_file:
       - .env
@@ -19,6 +19,6 @@ services:
     ports:
       - 3000:3001
     networks:
-      - connectFiverr
+      - connect-fiverr
 networks:
-  connectFiverr:
+  connect-fiverr:
