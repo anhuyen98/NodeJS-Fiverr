@@ -5,7 +5,6 @@ import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { query } from 'express';
 
 @Injectable()
 export class AuthService {

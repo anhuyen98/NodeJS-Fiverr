@@ -38,6 +38,6 @@ export class signUpDTO {
   @IsNotEmpty()
   certification: string;
 
-  // @ApiProperty({ type: String, description: 'Your avatar' })
+  @ApiProperty({ type: String, description: 'Your avatar' })
   avatar: string;
 }

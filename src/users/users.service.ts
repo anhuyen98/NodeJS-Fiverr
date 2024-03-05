@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { signUpDTO } from 'src/auth/dto/sign-up.dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   constructor(private cloudinary: CloudinaryService) {}
@@ -101,6 +101,8 @@ export class UsersService {
       if (isEmail) {
         return 'Email is existed';
       }
+      const password = bcrypt.hashSync(pass_word, 8);
+
       let { avatar } = body;
       if (avatar === '') {
         const initAvatar = fullname.split(' ');
@@ -111,7 +113,7 @@ export class UsersService {
       const newData: signUpDTO = {
         fullname,
         email,
-        pass_word,
+        pass_word: password,
         phone,
         birth_day,
         gender,
@@ -151,10 +153,11 @@ export class UsersService {
         certification,
         avatar,
       } = body;
+      const password = bcrypt.hashSync(pass_word, 8);
       const newData: signUpDTO = {
         fullname,
         email,
-        pass_word,
+        pass_word: password,
         phone,
         birth_day,
         gender,
